@@ -38,16 +38,18 @@ import Home from './components/home/home.vue'
 import Member from './components/member/member.vue'
 import Shopcar from './components/shopcar/shopcar.vue'
 import Search from './components/search/search.vue'
-import Newlists from  './components/news/newslist.vue'
+import Newslists from  './components/news/newslist.vue'
+import Newsinfo from  './components/news/newsinfo.vue'
 let router = new vueRouter({
 	linkActiveClass:'mui-active',
 	routes:[
-		{name:'root',path:'/',redirect:'/Home'},
+		{name:'root',path:'/',redirect:'/home'},
 		{name:'home',path:'/home',component:Home},
 		{name:'member',path:'/member',component:Member},
 		{name:'shopcar',path:'/shopcar',component:Shopcar},
 		{name:'search',path:'/search',component:Search},
-        {name:'newslist',path:'/newslist',component:Newlists}  //图文资讯列表的路由规则
+        {name:'newslist',path:'/news/newslist',component:Newslists}, //图文资讯列表的路由规则
+        {name:'newsinfo',path:'/news/newsinfo/:id',component:Newsinfo}  //图文资讯详细的路由规则
 
 	]
 });
