@@ -23,16 +23,22 @@ import '../statics/css/site.css'
 //在vue中加载vueRouter
 Vue.use(vueRouter)
 Vue.use(vueResource)  //使用vueResource对象才能自动在Vue对象实例上挂上$http
+
+//导入日期格式化插件
+import moment from  'moment'
 //定义全局过滤器
-Vue.filter('tolowercase1',function(input) {
-	return input.toLowerCase()
+Vue.filter('fmtdate',function(input,datastring) {
+	return moment(input).format(datastring)
 })
+
+
+
 //定义路由规则对象
 import Home from './components/home/home.vue'
 import Member from './components/member/member.vue'
 import Shopcar from './components/shopcar/shopcar.vue'
 import Search from './components/search/search.vue'
-
+import Newlists from  './components/news/newslist.vue'
 let router = new vueRouter({
 	linkActiveClass:'mui-active',
 	routes:[
@@ -40,7 +46,8 @@ let router = new vueRouter({
 		{name:'home',path:'/home',component:Home},
 		{name:'member',path:'/member',component:Member},
 		{name:'shopcar',path:'/shopcar',component:Shopcar},
-		{name:'search',path:'/search',component:Search}
+		{name:'search',path:'/search',component:Search},
+        {name:'newslist',path:'/newslist',component:Newlists}  //图文资讯列表的路由规则
 
 	]
 });
