@@ -25,6 +25,8 @@
                 <div class="time">{{item.add_time | fmtdate('YYYY-MM-DD')}}</div>
             </div>
         </div>
+        <!--加载更多-->
+        <mt-button class="more" type="danger" size="large" plain @click="getmore">加载更多</mt-button>
     </div>
 </template>
 <script>
@@ -33,11 +35,12 @@
     export default {
         data () {
             return {
-                comment:[]  //获取到评论信息放到这
+                comment:[],  //获取到评论信息放到这
+                pageindex:1  //获取评论的页码
             }
         },
         created () {
-            this.getcomment (1)
+            this.getcomment (this.pageindex)
         },
         methods: {
             //提交评论信息
@@ -53,7 +56,7 @@
                 this.$http.post(url,{content:content},{emulateJSON:true}).then(res => {
                     Toast('评论提交成功');  //mint-ui中的组件
                     //重新加载
-                    this.getcomment(1)
+                    this.getcomment(this.pageindex)
                     //清空文本框的值
                     this.$refs.contentText.value = ''
                 },res => {
@@ -67,9 +70,18 @@
                 let  url =   common.apihost + '/api/getcomments/' + this.artid + '?pageindex=' + pageindex
                 this.$http.get(url).then(
                     res => {
-                        this.comment = res.body.message
+                        //由于我们要实现加载更多的功能  这里应该是最新数据加载到原数据中
+                        //this.comment = res.body.message
+                        this.comment  =  this.comment.concat(res.body.message)
                     },
                     res => {console.log('获取失败')})
+            },
+            getmore () {
+                //将pageindex++
+                this.pageindex++
+                //将自增以后的pageindex传入getcomments(pageindex)
+                this.getcomment(this.pageindex)
+
             }
         },
         props:['artid']  //用来接收当前评论数据的所属内容id 父组件传递过来
@@ -107,5 +119,9 @@
     }
     .time {
         float: right;
+    }
+    /*加载更多*/
+    .more {
+        margin-top: 10px;
     }
 </style>
