@@ -17,6 +17,10 @@
             <ul>
                 <li v-for="item in list">
                     <img v-lazy="item.img_url">
+                    <p>
+                        <span class="title">{{item.title}}</span>
+                        {{item.zhaiyao}}
+                    </p>
                 </li>
             </ul>
         </div>
@@ -91,9 +95,21 @@
     }
     .imglist li {
         list-style: none;
+        position: relative;
     }
     .imglist img {
         width: 100%;
+    }
+    .imglist .title {
+        font-weight: bolder;
+        display: block;
+    }
+    .imglist p {
+        color: #fff;
+        position: absolute;
+        bottom: 10px;
+        left: 5px;
+        background-color: rgba(0,0,0,0.4);
     }
     /*懒加载图片加载样式end*/
 
