@@ -56,7 +56,7 @@
                 this.$http.post(url,{content:content},{emulateJSON:true}).then(res => {
                     Toast('评论提交成功');  //mint-ui中的组件
                     //重新加载
-                    this.getcomment(this.pageindex)
+                    this.getcomment(this.pageindex,true)
                     //清空文本框的值
                     this.$refs.contentText.value = ''
                 },res => {
@@ -65,14 +65,22 @@
                 })
 
             },
+
             //获取评论信息
-            getcomment (pageindex) {
+            getcomment (pageindex,isload) {
                 let  url =   common.apihost + '/api/getcomments/' + this.artid + '?pageindex=' + pageindex
                 this.$http.get(url).then(
                     res => {
                         //由于我们要实现加载更多的功能  这里应该是最新数据加载到原数据中
                         //this.comment = res.body.message
-                        this.comment  =  this.comment.concat(res.body.message)
+                        if (isload) {
+                            //重新加载用
+                            this.comment = res.body.message
+                        }else {
+                            //加载更多用
+                            this.comment  =  this.comment.concat(res.body.message)
+                        }
+
                     },
                     res => {console.log('获取失败')})
             },
@@ -80,9 +88,10 @@
                 //将pageindex++
                 this.pageindex++
                 //将自增以后的pageindex传入getcomments(pageindex)
-                this.getcomment(this.pageindex)
+                this.getcomment(this.pageindex,false)
 
             }
+
         },
         props:['artid']  //用来接收当前评论数据的所属内容id 父组件传递过来
 

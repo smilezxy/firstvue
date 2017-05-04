@@ -23,6 +23,9 @@ import '../statics/css/site.css'
 //在vue中加载vueRouter
 Vue.use(vueRouter)
 Vue.use(vueResource)  //使用vueResource对象才能自动在Vue对象实例上挂上$http
+//加载图片预览组件
+import VuePreview from 'vue-preview'
+Vue.use(VuePreview)
 
 //导入日期格式化插件
 import moment from  'moment'
@@ -41,6 +44,7 @@ import Search from './components/search/search.vue'
 import Newslists from  './components/news/newslist.vue'
 import Newsinfo from  './components/news/newsinfo.vue'
 import Photolist from  './components/photo/photolist.vue'
+import  Photoinfo from  './components/photo/info.vue'
 
 
 
@@ -54,7 +58,8 @@ let router = new vueRouter({
 		{name:'search',path:'/search',component:Search},
         {name:'newslist',path:'/news/newslist',component:Newslists}, //图文资讯列表的路由规则
         {name:'newsinfo',path:'/news/newsinfo/:id',component:Newsinfo},  //图文资讯详细的路由规则
-		{name:'photolist',path:'/photo/photolist',component:Photolist}
+		{name:'photolist',path:'/photo/photolist',component:Photolist}, //图片分享的路由规则
+        {name:'photoinfo',path:'/photo/info/:id',component:Photoinfo}  //图片详情
 
 
 	]

@@ -2,7 +2,7 @@
     <div class="tmpl">
         <!--分类-->
         <div class="cate">
-            <ul>
+            <ul id="cateul">
                 <li>
                     <a @click="getimglist(0)">全部</a>
                  </li>
@@ -16,7 +16,9 @@
         <div class="imglist">
             <ul>
                 <li v-for="item in list">
-                    <img v-lazy="item.img_url">
+                    <router-link v-bind='{to:"/photo/info/"+item.id}'>
+                        <img v-lazy="item.img_url">
+                    </router-link>
                     <p>
                         <span class="title">{{item.title}}</span>
                         {{item.zhaiyao}}
@@ -28,6 +30,7 @@
 </template>
 <script>
     import common from  '../../kits/common.js'
+    import { Indicator } from 'mint-ui';
     export default {
         data () {
             return {
@@ -46,6 +49,11 @@
                 this.$http.get(url).then(res => {
                     this.catelist = res.body.message
                     //console.log(res.body.message)
+                    //重新根据当前分类的个数计算ul的宽度
+                    let w = 70 * (res.body.message.length + 1)
+                    document.getElementById('cateul').style.width = w + 'px'
+
+
                 },res => {
                     console.log('获取失败')
                 })
@@ -53,10 +61,14 @@
             },
             //根据分类id获取图片数据
             getimglist (cateid) {
+                //这个位置应该提醒用户图片正在加载
+                Indicator.open('加载中...');
                 let url = common.apihost + '/api/getimages/' + cateid
                 this.$http.get(url).then(res => {
                     this.list = res.body.message
                     //console.log(res.body.message)
+                    //这个位置显示加载成功
+                    Indicator.close();
                 },res => {
                     console.log('获取失败')
                 })
@@ -73,7 +85,6 @@
     .cate ul {
         padding-left: 10px;
         padding-right: 10px;
-        width:1000px;
         margin: 0;
     }
     .cate ul li {
