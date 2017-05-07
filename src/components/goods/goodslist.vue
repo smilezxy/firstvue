@@ -56,7 +56,7 @@
         margin-bottom: 4px;
         margin-top: 8px;
         width: 175px;
-        height: 300px;
+        height: 320px;
     }
     .desc h5 {
         color: #000;

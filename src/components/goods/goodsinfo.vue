@@ -13,9 +13,17 @@
             <div class="count">购买数量：
                 <!--组件-->
                 <sub-number v-on:count="getcount" class="subnumber"></sub-number>
+                <!--动画小球-->
+                <transition  v-on:before-enter="beforeEnter"
+                               v-on:enter="enter"
+                               v-on:after-enter="afterEnter">
+                    <div class="ball" v-show="isshow">
+                    </div>
+                </transition>
+
             </div>
             <mt-button type="primary" size="small">立即购买</mt-button>
-            <mt-button type="danger" size="small">加入购物车</mt-button>
+            <mt-button type="danger" size="small" @click="toshopdata">加入购物车</mt-button>
         </div>
         <!--3.0实现商品参数区域-->
         <div class="params">
@@ -27,8 +35,11 @@
 
             </ul>
         </div>
-        <!--4.0商品的图文信息区域-->
-        <!--5.0商品的评论区域-->
+        <!--4.0商品的图文信息区域--><!--5.0商品的评论区域-->
+        <div class="footer">
+            <mt-button plain type="primary" size="large" @click="getdesc">图文介绍</mt-button>
+            <mt-button plain class="mtbtn" type="danger" size="large" @click="getcomment">商品评论</mt-button>
+        </div>
     </div>
 </template>
 <script>
@@ -37,16 +48,21 @@
     import common from  '../../kits/common.js'
     //2.0.1导入subnubmer.vue组件
     import subNumber from '../subcomponents/subnumber.vue'
+    //注册commonvue.js
+    import {vueobj} from '../../kits/commonvue.js'
+    import {setItem} from '../../kits/localStorageHelper.js'
     export default {
         data () {
             return {
                 imglist:[], //1.0.2这个变量存放着轮播图图片的数据
-                goodsinfodata:[]
+                goodscount:1,
+                goodsinfodata:[],
+                isshow: false //控制小球的隐藏与显示
             }
         },
         created () {
           this.getimglist ()
-            this.getgoodsinfo ()
+          this.getgoodsinfo ()
         },
         methods:{
             //1.0.3获取轮播图图片数据的方法
@@ -59,8 +75,8 @@
                 })
             },
             //2.0.2定义一个方法用来接收子组件传过来的值
-            getcount (count) {
-                    console.log(count)
+            getcount (obj) {
+                    this.goodscount = obj.count
             },
             getgoodsinfo () {
                 let id = this.$route.params.id
@@ -68,6 +84,42 @@
                 this.$http.get(url).then (res => {
                     this.goodsinfodata = res.body.message[0]
                 })
+            },
+            getcomment () {
+                //获取到商品id
+                let id = this.$route.params.id
+                //跳转到商品评论组件comment.vue
+                this.$router.push({name:'goodscomment',params:{id:id}})
+
+            },
+            getdesc () {
+                let id = this.$route.params.id
+                this.$router.push({name:'goodsdesc',params:{id:id}})
+
+            },
+            //实现购物车图标上数量的更改
+            toshopdata () {
+                //发送通知
+                vueobj.$emit('shopdata',this.goodscount)
+                //将商品的id和数量存储到localStorage
+                let id = this.$route.params.id
+                setItem({goodsid:id,count:this.goodscount})
+                //出现动画效果
+                this.isshow = !this.isshow
+
+            },
+            //定义小球动画
+            beforeEnter (el,done) {
+                el.style.transform ='translate3d(0,0,0)'
+            },
+            enter (el,done) {
+                //注意点：想要有动画的效果  就必须不停的刷新页面
+                var  offset = el.offsetWidth  //设置这句话就能保证小球时时移动
+                el.style.transform ='translate3d(90px,210px,0)'
+                done ()
+            },
+            afterEnter (el,done) {
+                this.isshow = !this.isshow
             }
         },
         components:{
@@ -108,10 +160,30 @@
         padding: 10px 0;
         padding-left: 10px;
         margin-bottom: 10px;
+        position: relative;
+    }
+    .ball {
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        border-radius: 50%;
+        position:absolute;
+        top:0px;
+        left: 120px;
+        transition: all 0.5s cubic-bezier(.35,-0.44,0.83,.67);
+        z-index: 50;
     }
     .subnumber {
         display: inline-block;
     }
+    /*小球动画样式*/
+    /*.drop-enter-active, .drop-leave-active {*/
+        /*transition: opacity 1s*/
+    /*}*/
+    /*.drop-enter, .drop-leave-active {*/
+        /*opacity: 0*/
+    /*}*/
+
     /*商品参数样式*/
     .params h6 {
         padding:5px;
@@ -120,5 +192,8 @@
     }
     .params li {
         list-style: none;
+    }
+    .mtbtn {
+        margin-top: 10px;
     }
 </style>

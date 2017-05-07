@@ -13,7 +13,7 @@
 	<!-- 整个系统的底部 -->
 	<nav class="mui-bar mui-bar-tab">
 			<!-- <a class="mui-tab-item mui-active" href="#tabbar"> -->
-		<router-link class="mui-tab-item" to="/home" :class="light">
+		<router-link class="mui-tab-item" to="/home" >
 			<span class="mui-icon mui-icon-home"></span>
 			<span class="mui-tab-label">首页</span>
 		</router-link>
@@ -24,7 +24,7 @@
 		</router-link>
 		<router-link class="mui-tab-item" to="/shopcar">
 			<span class="mui-icon mui-icon-contact">
-				<span class="mui-badge">9</span>
+				<span class="mui-badge" id="badge">0</span>
 			</span>
 			<span class="mui-tab-label">购物</span>
 		</router-link>
@@ -36,6 +36,17 @@
 	</div>
 </template>
 <script>
+    //注册commonvue.js  用来接收goodsinfo.vue中$emit中传递过来的数据
+    import {vueobj} from './kits/commonvue.js'
+	//注册接收事件
+	vueobj.$on('shopdata',function (data)  {
+			//由于objvue与export default 中的vue对象不是同一个 所以在此处通过原生js操作dom实现购物车数据增加
+		let badge = document.getElementById('badge')
+		let count = badge.innerText - 0  //获取原有的值
+		count += data //原始值上增加新数据
+		badge.innerText = count //将新数据赋值回去
+
+    })
 	export default {
 		data () {
 			return {
@@ -47,7 +58,6 @@
 		  '$route':function (newval,oldval) {
 			  if(newval.path.toLowerCase() == '/home') {
 					this.isShow = false;
-				  	this.light = 'mui-active'
 			  }else {
 			      this.isShow = true
 			  }

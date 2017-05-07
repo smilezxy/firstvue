@@ -47,6 +47,8 @@ import Photolist from  './components/photo/photolist.vue'
 import  Photoinfo from  './components/photo/info.vue'
 import Goodslist from  './components/goods/goodslist.vue'
 import Goodsinfo from  './components/goods/goodsinfo.vue'
+import Goodscomment from  './components/goods/comment.vue'
+import  Goodsdesc from  './components/goods/goodsdesc.vue'
 
 
 
@@ -63,7 +65,9 @@ let router = new vueRouter({
 		{name:'photolist',path:'/photo/photolist',component:Photolist}, //图片分享的路由规则
         {name:'photoinfo',path:'/photo/info/:id',component:Photoinfo},  //图片详情的路由规则
 		{name:'goodslist',path:'/goods/goodslist',component:Goodslist},  //商品列表的路由规则
-        {name:'goodsinfo',path:'/goods/goodsinfo/:id',component:Goodsinfo}
+        {name:'goodsinfo',path:'/goods/goodsinfo/:id',component:Goodsinfo},//商品信息的路由规则
+        {name:'goodscomment',path:'/goods/comment/:id',component:Goodscomment}, //商品评论的路由规则
+        {name:'goodsdesc',path:'/goods/goodsdesc/:id',component:Goodsdesc} //商品t图文信息的路由规则
 
 
 	]
